@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="uz" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | EduClub Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Poppins', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .dark .glass {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .slide-in { animation: slideIn 0.4s ease-out; }
+        
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.1); }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 dark:bg-gray-900">
+
+    <!-- Login Screen -->
+    <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
+        <div class="absolute inset-0 bg-gradient-to-br from-purple-600 via-blue-600 to-pink-600"></div>
+        <div class="relative glass rounded-3xl p-8 max-w-md w-full shadow-2xl">
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center">
+                    <i class="fas fa-shield-alt text-white text-3xl"></i>
+                </div>
+                <h1 class="text-3xl font-bold gradient-text mb-2">Admin Panel</h1>
+                <p class="text-gray-600 dark:text-gray-300">EduClub Pro Boshqaruv Tizimi</p>
+            </div>
+            
+            <form onsubmit="handleLogin(event)" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Email</label>
+                    <input type="email" id="loginEmail" value="admin@educlub.uz" required 
+                           class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-800 text-gray-800 dark:text-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Parol</label>
+                    <input type="password" id="loginPassword" value="admin123" required 
+                           class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-800 text-gray-800 dark:text-white">
+                </div>
+                <button type="submit" 
+                        class="w-full py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Kirish
+                </button>
+            </form>
+            
+            <div class="mt-6 text-center">
+                <a href="index.html" class="text-purple-600 hover:text-purple-800 font-semibold">
+                    <i class="fas fa-arrow-left mr-2"></i>Foydalanuvchi Sahifasiga Qaytish
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="adminDashboard" class="hidden">
+        <!-- Sidebar -->
+        <div class="fixed left-0 top-0 h-full w-64 bg-white dark:bg-gray-800 shadow-2xl z-50 slide-in">
+            <div class="p-6 border-b border-gray-200 dark:border-gray-700">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-graduation-cap text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold gradient-text">EduClub</h2>
+                        <p class="text-xs text-gray-500">Admin Panel</p>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="p-4 space-y-2">
+                <button onclick="showSection('dashboard')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 font-semibold">
+                    <i class="fas fa-chart-line w-5"></i>
+                    <span>Dashboard</span>
+                </button>
+                <button onclick="showSection('requests')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-semibold transition">
+                    <i class="fas fa-bell w-5"></i>
+                    <span>So'rovlar</span>
+                    <span id="requestBadge" class="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full hidden">0</span>
+                </button>
+                <button onclick="showSection('members')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-semibold transition">
+                    <i class="fas fa-users w-5"></i>
+                    <span>A'zolar</span>
+                </button>
+                <button onclick="showSection('circles')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-semibold transition">
+                    <i class="fas fa-layer-group w-5"></i>
+                    <span>To'garaklar</span>
+                </button>
+                <button onclick="showSection('analytics')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-semibold transition">
+                    <i class="fas fa-chart-bar w-5"></i>
+                    <span>Tahlillar</span>
+                </button>
+                <button onclick="showSection('settings')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-semibold transition">
+                    <i class="fas fa-cog w-5"></i>
+                    <span>Sozlamalar</span>
+                </button>
+            </nav>
+            
+            <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700">
+                <button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 font-semibold transition">
+                    <i class="fas fa-sign-out-alt w-5"></i>
+                    <span>Chiqish</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="ml-64 p-8">
+            <!-- Header -->
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-4xl font-bold gradient-text mb-2">Dashboard</h1>
+                    <p class="text-gray-600 dark:text-gray-400">Xush kelibsiz, Admin!</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button onclick="toggleDarkMode()" class="w-10 h-10 rounded-full glass flex items-center justify-center hover:scale-110 transition">
+                        <i class="fas fa-moon dark:hidden"></i>
+                        <i class="fas fa-sun hidden dark:block"></i>
+                    </button>
+                    <div class="flex items-center gap-3 glass px-4 py-2 rounded-full">
+                        <div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                            AK
+                        </div>
+                        <span class="text-gray-700 dark:text-gray-200 font-semibold">Admin</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg card-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-users text-white text-2xl"></i>
+                        </div>
+                        <span class="text-green-500 font-bold text-sm"><i class="fas fa-arrow-up mr-1"></i>+12%</span>
+                    </div>
+                    <h3 class="text-3xl font-bold text-gray-800 dark:text-white mb-1" id="totalMembers">0</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">Jami A'zolar</p>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg card-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-bell text-white text-2xl"></i>
+                        </div>
+                        <span id="pendingRequests" class="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">0</span>
+                    </div>
+                    <h3 class="text-3xl font-bold text-gray-800 dark:text-white mb-1" id="totalRequests">0</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">Kutilayotgan So'rovlar</p>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg card-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-check-circle text-white text-2xl"></i>
+                        </div>
+                        <span class="text-green-500 font-bold text-sm"><i class="fas fa-arrow-up mr-1"></i>+24%</span>
+                    </div>
+                    <h3 class="text-3xl font-bold text-gray-800 dark:text-white mb-1" id="approvedMembers">0</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">Tasdiqlangan</p>
+                </div>
+
+                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg card-hover">
+                    <div class="flex items-center justify-between mb-4">
+                        <div class="w-14 h-14 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center">
+                            <i class="fas fa-layer-group text-white text-2xl"></i>
+                        </div>
+                        <span class="text-yellow-500 font-bold text-sm">6</span>
+                    </div>
+                    <h3 class="text-3xl font-bold text-gray-800 dark:text-white mb-1">6</h3>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm">Faol To'garaklar</p>
+                </div>
+            </div>
+
+            <!-- Requests Section -->
+            <div id="requestsSection" class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-8">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 dark:text-white">
+                        <i class="fas fa-bell text-purple-600 mr-2"></i>Yangi So'rovlar
+                    </h2>
+                    <button onclick="clearAllRequests()" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition text-sm font-semibold">
+                        <i class="fas fa-trash mr-2"></i>Barchasini O'chirish
+                    </button>
+                </div>
+                <div id="requestsList" class="space-y-4">
+                    <!-- Requests will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Members Table -->
+            <div id="membersSection" class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 dark:text-white">
+                        <i class="fas fa-users text-purple-600 mr-2"></i>A'zolar Ro'yxati
+                    </h2>
+                    <div class="flex gap-3">
+                        <input type="text" id="searchMembers" placeholder="A'zo qidirish..." 
+                               class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-white" 
+                               oninput="searchMembersList()">
+                        <button onclick="exportMembersCSV()" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:shadow-lg transition text-sm font-semibold">
+                            <i class="fas fa-download mr-2"></i>Export CSV
+                        </button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gradient-to-r from-purple-600 to-pink-600">
+                            <tr>
+                                <th class="p-4 text-left text-white font-semibold">A'zo</th>
+                                <th class="p-4 text-left text-white font-semibold">Email</th>
+                                <th class="p-4 text-left text-white font-semibold">Telefon</th>
+                                <th class="p-4 text-left text-white font-semibold">Qo'shilgan</th>
+                                <th class="p-4 text-center text-white font-semibold">Status</th>
+                                <th class="p-4 text-right text-white font-semibold">Amallar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="membersTableBody" class="divide-y divide-gray-200 dark:divide-gray-700">
+                            <!-- Members will be rendered here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Circles Section -->
+            <div id="circlesSection" class="hidden bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800 dark:text-white">
+                        <i class="fas fa-layer-group text-purple-600 mr-2"></i>To'garaklar Boshqaruvi
+                    </h2>
+                    <button onclick="showAddCircleForm()" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:shadow-lg transition text-sm font-semibold">
+                        <i class="fas fa-plus mr-2"></i>Yangi To'garak
+                    </button>
+                </div>
+                <div id="circlesList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <!-- Circles will be rendered here -->
+                </div>
+            </div>
+
+            <!-- Analytics Section -->
+            <div id="analyticsSection" class="hidden bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">
+                    <i class="fas fa-chart-bar text-purple-600 mr-2"></i>Tahlillar va Statistika
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-700 dark:text-gray-200 mb-4">Oylik O'sish</h3>
+                        <div class="h-64 flex items-end justify-around gap-2" id="growthChart">
+                            <!-- Chart bars will be rendered here -->
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-bold text-gray-700 dark:text-gray-200 mb-4">To'garaklar Bo'yicha</h3>
+                        <div class="space-y-3" id="circlesChart">
+                            <!-- Progress bars will be rendered here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Section -->
+            <div id="settingsSection" class="hidden bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+                <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-6">
+                    <i class="fas fa-cog text-purple-600 mr-2"></i>Sozlamalar
+                </h2>
+                <div class="space-y-6 max-w-2xl">
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4">
+                        <h3 class="font-bold text-gray-800 dark:text-white mb-4">Ko'rinish</h3>
+                        <div class="flex items-center justify-between">
+                            <span class="text-gray-700 dark:text-gray-200">Dark Mode</span>
+                            <button onclick="toggleDarkMode()" class="w-14 h-7 bg-gray-300 dark:bg-purple-600 rounded-full relative transition">
+                                <div class="absolute top-0.5 left-0.5 dark:left-7 w-6 h-6 bg-white rounded-full transition shadow"></div>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4">
+                        <h3 class="font-bold text-gray-800 dark:text-white mb-4">Bildirishnomalar</h3>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-700 dark:text-gray-200">Email bildirishnomalar</span>
+                                <button class="w-14 h-7 bg-purple-600 rounded-full relative transition">
+                                    <div class="absolute top-0.5 left-7 w-6 h-6 bg-white rounded-full transition shadow"></div>
+                                </button>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-gray-700 dark:text-gray-200">Yangi so'rovlar</span>
+                                <button class="w-14 h-7 bg-purple-600 rounded-full relative transition">
+                                    <div class="absolute top-0.5 left-7 w-6 h-6 bg-white rounded-full transition shadow"></div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4">
+                        <h3 class="font-bold text-gray-800 dark:text-white mb-4">Ma'lumotlar</h3>
+                        <div class="space-y-3">
+                            <button onclick="exportAllData()" class="w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:shadow-lg transition font-semibold">
+                                <i class="fas fa-download mr-2"></i>Barcha Ma'lumotlarni Export Qilish
+                            </button>
+                            <button onclick="clearAllData()" class="w-full px-4 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition font-semibold">
+                                <i class="fas fa-trash mr-2"></i>Barcha Ma'lumotlarni Tozalash
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize data from localStorage
+        let joinRequests = JSON.parse(localStorage.getItem('joinRequests') || '[]');
+        let approvedMembers = JSON.parse(localStorage.getItem('approvedMembers') || '[]');
+        let circlesData = JSON.parse(localStorage.getItem('circlesData') || '[]');
+        
+        // Default circles if empty
+        if (circlesData.length === 0) {
+            circlesData = [
+                { id: 1, name: 'Python Dasturlash', members: 24, schedule: 'Dush, Chor, Jum 09:00', status: 'Faol' },
+                { id: 2, name: 'English Speaking', members: 18, schedule: 'Sesh, Pay 14:00', status: 'Faol' },
+                { id: 3, name: 'Graphic Design', members: 32, schedule: 'Sesh, Jum 10:00', status: 'Faol' },
+                { id: 4, name: 'Web Development', members: 28, schedule: 'Dush, Pay 15:00', status: 'Faol' },
+                { id: 5, name: 'Robotics & AI', members: 15, schedule: 'Chor, Shan 11:00', status: 'Faol' },
+                { id: 6, name: 'Russian Language', members: 22, schedule: 'Sesh, Pay 09:00', status: 'Faol' }
+            ];
+            localStorage.setItem('circlesData', JSON.stringify(circlesData));
+        }
+
+        // Login Handler
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (email === 'admin@educlub.uz' && password === 'admin123') {
+                document.getElementById('loginScreen').classList.add('hidden');
+                document.getElementById('adminDashboard').classList.remove('hidden');
+                loadDashboard();
+                showToast('Muvaffaqiyatli kirdingiz!', 'success');
+            } else {
+                showToast('Email yoki parol noto\'g\'ri!', 'error');
+            }
+        }
+
+        // Load Dashboard
+        function loadDashboard() {
+            updateStats();
+            renderRequests();
+            renderMembers();
+        }
+
+        // Update Statistics
+        function updateStats() {
+            document.getElementById('totalMembers').textContent = approvedMembers.length;
+            document.getElementById('totalRequests').textContent = joinRequests.length;
+            document.getElementById('approvedMembers').textContent = approvedMembers.length;
+            
+            const pendingCount = joinRequests.length;
+            document.getElementById('pendingRequests').textContent = pendingCount;
+            
+            const badge = document.getElementById('requestBadge');
+            if (pendingCount > 0) {
+                badge.textContent = pendingCount;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        // Render Requests
+        function renderRequests() {
+            const container = document.getElementById('requestsList');
+            
+            if (joinRequests.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 text-gray-500">
+                        <i class="fas fa-inbox text-6xl mb-4 text-gray-300"></i>
+                        <p class="text-lg">Hozircha yangi so'rovlar yo'q</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = joinRequests.map((request, index) => `
+                <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4 hover:shadow-lg transition">
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">${request.name}</h3>
+                            <div class="grid grid-cols-2 gap-2 text-sm">
+                                <div class="text-gray-600 dark:text-gray-400">
+                                    <i class="fas fa-envelope mr-2 text-purple-600"></i>${request.email}
+                                </div>
+                                <div class="text-gray-600 dark:text-gray-400">
+                                    <i class="fas fa-phone mr-2 text-purple-600"></i>${request.phone}
+                                </div>
+                            </div>
+                            <div class="mt-2 text-xs text-gray-500">
+                                <i class="fas fa-clock mr-1"></i>${request.timestamp}
+                            </div>
+                        </div>
+                        <div class="flex gap-2 ml-4">
+                            <button onclick="approveRequest(${index})" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition font-semibold text-sm">
+                                <i class="fas fa-check mr-1"></i>Tasdiqlash
+                            </button>
+                            <button onclick="rejectRequest(${index})" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition font-semibold text-sm">
+                                <i class="fas fa-times mr-1"></i>Rad etish
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Approve Request
+        function approveRequest(index) {
+            const request = joinRequests[index];
+            request.status = 'Faol';
+            request.joinDate = new Date().toLocaleDateString('uz-UZ');
+            approvedMembers.push(request);
+            joinRequests.splice(index, 1);
+            
+            saveData();
+            updateStats();
+            renderRequests();
+            renderMembers();
+            showToast('So\'rov tasdiqlandi!', 'success');
+        }
+
+        // Reject Request
+        function rejectRequest(index) {
+            if (confirm('Rostdan ham bu so\'rovni rad etmoqchimisiz?')) {
+                joinRequests.splice(index, 1);
+                saveData();
+                updateStats();
+                renderRequests();
+                showToast('So\'rov rad etildi', 'info');
+            }
+        }
+
+        // Clear All Requests
+        function clearAllRequests() {
+            if (confirm('Barcha so\'rovlarni o\'chirmoqchimisiz?')) {
+                joinRequests = [];
+                saveData();
+                updateStats();
+                renderRequests();
+                showToast('Barcha so\'rovlar o\'chirildi', 'success');
+            }
+        }
+
+        // Render Members
+        function renderMembers() {
+            const tbody = document.getElementById('membersTableBody');
+            
+            if (approvedMembers.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="p-8 text-center text-gray-500">
+                            <i class="fas fa-users text-4xl mb-2 text-gray-300"></i>
+                            <p>Hali a'zolar yo'q</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = approvedMembers.map((member, index) => `
+                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                    <td class="p-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">
+                                ${member.name.split(' ').map(n => n[0]).join('')}
+                            </div>
+                            <span class="font-semibold text-gray-800 dark:text-white">${member.name}</span>
+                        </div>
+                    </td>
+                    <td class="p-4 text-gray-600 dark:text-gray-300">${member.email}</td>
+                    <td class="p-4 text-gray-600 dark:text-gray-300">${member.phone}</td>
+                    <td class="p-4 text-center">
+                        <span class="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-full text-xs font-bold">
+                            ${member.status}
+                        </span>
+                    </td>
+                    <td class="p-4 text-right">
+                        <button onclick="deleteMember(${index})" class="text-red-600 hover:text-red-800 p-2 hover:bg-red-50 dark:hover:bg-red-900 rounded-lg transition">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Delete Member
+        function deleteMember(index) {
+            if (confirm('Rostdan ham bu a\'zoni o\'chirmoqchimisiz?')) {
+                approvedMembers.splice(index, 1);
+                saveData();
+                updateStats();
+                renderMembers();
+                showToast('A\'zo o\'chirildi', 'success');
+            }
+        }
+
+        // Export to CSV
+        function exportMembersCSV() {
+            const headers = ['Ism', 'Email', 'Telefon', 'Status', 'Qo\'shilgan sana'];
+            const rows = approvedMembers.map(m => [m.name, m.email, m.phone, m.status, m.joinDate]);
+            
+            const csvContent = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+            const blob = new Blob(['\ufeff' + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `members_${new Date().toISOString().split('T')[0]}.csv`;
+            link.click();
+            
+            showToast('CSV fayl yuklab olindi!', 'success');
+        }
+
+        // Search Members
+        function searchMembersList() {
+            const query = document.getElementById('searchMembers').value.toLowerCase();
+            const filtered = approvedMembers.filter(m => 
+                m.name.toLowerCase().includes(query) ||
+                m.email.toLowerCase().includes(query) ||
+                m.phone.includes(query)
+            );
+            
+            const tbody = document.getElementById('membersTableBody');
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-8 text-center text-gray-500"><i class="fas fa-search text-4xl mb-2 text-gray-300"></i><p>A'zo topilmadi</p></td></tr>`;
+                return;
+            }
+            
+            tbody.innerHTML = filtered.map((member, index) => `
+                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                    <td class="p-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">
+                                ${member.name.split(' ').map(n => n[0]).join('')}
+                            </div>
+                            <span class="font-semibold text-gray-800 dark:text-white">${member.name}</span>
+                        </div>
+                    </td>
+                    <td class="p-4 text-gray-600 dark:text-gray-300">${member.email}</td>
+                    <td class="p-4 text-gray-600 dark:text-gray-300">${member.phone}</td>
+                    <td class="p-4 text-gray-600 dark:text-gray-300">${member.joinDate}</td>
+                    <td class="p-4 text-center">
+                        <span class="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-full text-xs font-bold">
+                            ${member.status}
+                        </span>
+                    </td>
+                    <td class="p-4 text-right">
+                        <button onclick="deleteMember(${approvedMembers.indexOf(member)})" class="text-red-600 hover:text-red-800 p-2 hover:bg-red-50 dark:hover:bg-red-900 rounded-lg transition">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Render Circles
+        function renderCircles() {
+            const container = document.getElementById('circlesList');
+            container.innerHTML = circlesData.map((circle, index) => `
+                <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4 hover:shadow-lg transition">
+                    <div class="flex justify-between items-start mb-3">
+                        <h3 class="text-lg font-bold text-gray-800 dark:text-white">${circle.name}</h3>
+                        <span class="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded text-xs font-bold">${circle.status}</span>
+                    </div>
+                    <div class="space-y-2 text-sm text-gray-600 dark:text-gray-400 mb-3">
+                        <div><i class="fas fa-users mr-2 text-purple-600"></i>${circle.members} a'zo</div>
+                        <div><i class="fas fa-clock mr-2 text-purple-600"></i>${circle.schedule}</div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="editCircle(${index})" class="flex-1 px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition text-sm font-semibold">
+                            <i class="fas fa-edit mr-1"></i>Tahrirlash
+                        </button>
+                        <button onclick="deleteCircle(${index})" class="flex-1 px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition text-sm font-semibold">
+                            <i class="fas fa-trash mr-1"></i>O'chirish
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function showAddCircleForm() {
+            showToast("Yangi to'garak qo'shish formasi", "info");
+        }
+
+        function editCircle(index) {
+            showToast("To'garakni tahrirlash", "info");
+        }
+
+        function deleteCircle(index) {
+            if (confirm("Rostdan ham bu to'garakni o'chirmoqchimisiz?")) {
+                circlesData.splice(index, 1);
+                localStorage.setItem('circlesData', JSON.stringify(circlesData));
+                renderCircles();
+                showToast("To'garak o'chirildi", "success");
+            }
+        }
+
+        // Render Analytics
+        function renderAnalytics() {
+            // Growth Chart
+            const growthChart = document.getElementById('growthChart');
+            const months = ['Yan', 'Fev', 'Mar', 'Apr', 'May', 'Iyun', 'Iyul'];
+            const heights = [40, 65, 50, 80, 70, 90, 85];
+            
+            growthChart.innerHTML = heights.map((h, i) => `
+                <div class="flex-1 flex flex-col items-center">
+                    <div class="w-full bg-gradient-to-t from-purple-500 to-pink-500 rounded-t-lg hover:opacity-80 transition cursor-pointer" style="height: ${h}%" title="${h}%">
+                    </div>
+                    <span class="text-xs text-gray-600 dark:text-gray-400 mt-2">${months[i]}</span>
+                </div>
+            `).join('');
+            
+            // Circles Chart
+            const circlesChart = document.getElementById('circlesChart');
+            const circlesStats = [
+                {name: 'Python Dasturlash', percent: 85, color: 'from-blue-500 to-cyan-500'},
+                {name: 'English Speaking', percent: 72, color: 'from-green-500 to-emerald-500'},
+                {name: 'Graphic Design', percent: 68, color: 'from-purple-500 to-pink-500'},
+                {name: 'Web Development', percent: 55, color: 'from-orange-500 to-red-500'}
+            ];
+            
+            circlesChart.innerHTML = circlesStats.map(item => `
+                <div>
+                    <div class="flex justify-between mb-1">
+                        <span class="text-sm font-semibold text-gray-700 dark:text-gray-200">${item.name}</span>
+                        <span class="text-sm font-bold text-purple-600">${item.percent}%</span>
+                    </div>
+                    <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-3">
+                        <div class="bg-gradient-to-r ${item.color} h-3 rounded-full" style="width: ${item.percent}%"></div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Export All Data
+        function exportAllData() {
+            const allData = {
+                joinRequests: joinRequests,
+                approvedMembers: approvedMembers,
+                circlesData: circlesData,
+                exportDate: new Date().toISOString()
+            };
+            
+            const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `edoclub_backup_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            showToast('Ma\'lumotlar yuklab olindi!', 'success');
+        }
+
+        // Clear All Data
+        function clearAllData() {
+            if (confirm('DIQQAT! Barcha ma\'lumotlar o\'chiriladi. Davom etasizmi?')) {
+                if (confirm('Haqiqatan ham ishonchingiz komilmi?')) {
+                    localStorage.removeItem('joinRequests');
+                    localStorage.removeItem('approvedMembers');
+                    localStorage.removeItem('circlesData');
+                    joinRequests = [];
+                    approvedMembers = [];
+                    circlesData = [];
+                    updateStats();
+                    renderRequests();
+                    renderMembers();
+                    showToast('Barcha ma\'lumotlar o\'chirildi', 'success');
+                }
+            }
+        }
+
+        // Save Data to LocalStorage
+        function saveData() {
+            localStorage.setItem('joinRequests', JSON.stringify(joinRequests));
+            localStorage.setItem('approvedMembers', JSON.stringify(approvedMembers));
+        }
+
+        // Show Section
+        function showSection(section) {
+            // Hide all sections
+            document.getElementById('requestsSection').classList.add('hidden');
+            document.getElementById('membersSection').classList.add('hidden');
+            document.getElementById('circlesSection').classList.add('hidden');
+            document.getElementById('analyticsSection').classList.add('hidden');
+            document.getElementById('settingsSection').classList.add('hidden');
+            
+            // Update nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-purple-100', 'dark:bg-purple-900/30', 'text-purple-700', 'dark:text-purple-300');
+                btn.classList.add('text-gray-700', 'dark:text-gray-200');
+            });
+            
+            // Show selected section
+            const sectionMap = {
+                'dashboard': () => {
+                    document.getElementById('requestsSection').classList.remove('hidden');
+                    document.getElementById('membersSection').classList.remove('hidden');
+                },
+                'requests': () => document.getElementById('requestsSection').classList.remove('hidden'),
+                'members': () => document.getElementById('membersSection').classList.remove('hidden'),
+                'circles': () => {
+                    document.getElementById('circlesSection').classList.remove('hidden');
+                    renderCircles();
+                },
+                'analytics': () => {
+                    document.getElementById('analyticsSection').classList.remove('hidden');
+                    renderAnalytics();
+                },
+                'settings': () => document.getElementById('settingsSection').classList.remove('hidden')
+            };
+            
+            if (sectionMap[section]) {
+                sectionMap[section]();
+            }
+            
+            // Update active nav button
+            event.target.closest('.nav-btn').classList.add('bg-purple-100', 'dark:bg-purple-900/30', 'text-purple-700', 'dark:text-purple-300');
+            event.target.closest('.nav-btn').classList.remove('text-gray-700', 'dark:text-gray-200');
+        }
+
+        // Toggle Dark Mode
+        function toggleDarkMode() {
+            document.documentElement.classList.toggle('dark');
+            localStorage.setItem('darkMode', document.documentElement.classList.contains('dark'));
+        }
+
+        // Logout
+        function logout() {
+            if (confirm('Chiqmoqchimisiz?')) {
+                document.getElementById('adminDashboard').classList.add('hidden');
+                document.getElementById('loginScreen').classList.remove('hidden');
+                showToast('Tizimdan chiqdingiz', 'info');
+            }
+        }
+
+        // Toast Notification
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            const colors = {
+                success: 'from-green-500 to-emerald-500',
+                error: 'from-red-500 to-rose-500',
+                info: 'from-blue-500 to-cyan-500'
+            };
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                info: 'fa-info-circle'
+            };
+            
+            toast.className = `fixed top-6 right-6 z-50 glass rounded-xl p-4 flex items-center gap-3 shadow-2xl`;
+            toast.style.animation = 'slideIn 0.4s ease-out';
+            toast.innerHTML = `
+                <div class="w-10 h-10 bg-gradient-to-r ${colors[type]} rounded-full flex items-center justify-center flex-shrink-0">
+                    <i class="fas ${icons[type]} text-white"></i>
+                </div>
+                <p class="text-gray-700 dark:text-gray-200 font-semibold">${message}</p>
+            `;
+            
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // Check for saved dark mode
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.documentElement.classList.add('dark');
+        }
+
+        // Auto-refresh requests every 3 seconds
+        setInterval(() => {
+            if (!document.getElementById('adminDashboard').classList.contains('hidden')) {
+                joinRequests = JSON.parse(localStorage.getItem('joinRequests') || '[]');
+                approvedMembers = JSON.parse(localStorage.getItem('approvedMembers') || '[]');
+                updateStats();
+                renderRequests();
+                renderMembers();
+            }
+        }, 3000);
+    </script>
+</body>
+</html>
