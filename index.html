@@ -392,12 +392,16 @@
         @keyframes modalEnter {
             from {
                 opacity: 0;
-                transform: scale(0.9);
+                transform: scale(0.9) translateY(-20px);
             }
             to {
                 opacity: 1;
-                transform: scale(1);
+                transform: scale(1) translateY(0);
             }
+        }
+
+        .modal-enter {
+            animation: modalEnter 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         /* Stagger Animation */
@@ -1060,6 +1064,116 @@
         </div>
     </div>
 
+    <!-- Join Circle Modal -->
+    <div id="joinModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4" onclick="if(event.target === this) closeJoinModal()">
+        <div class="bg-white dark:bg-gray-800 rounded-3xl shadow-2xl max-w-md w-full modal-enter overflow-hidden">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 p-8 text-white relative overflow-hidden">
+                <div class="absolute inset-0 opacity-20">
+                    <div class="absolute top-0 left-0 w-32 h-32 bg-white rounded-full -translate-x-16 -translate-y-16"></div>
+                    <div class="absolute bottom-0 right-0 w-24 h-24 bg-white rounded-full translate-x-12 translate-y-12"></div>
+                </div>
+                <div class="relative flex justify-between items-center">
+                    <div>
+                        <div class="flex items-center gap-2 mb-2">
+                            <i class="fas fa-graduation-cap text-2xl"></i>
+                            <p class="text-sm opacity-90">To'garakka Qo'shilish</p>
+                        </div>
+                        <h3 class="text-2xl font-bold" id="modalCircleName">To'garak nomi</h3>
+                    </div>
+                    <button onclick="closeJoinModal()" class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white/30 hover:rotate-90 transition-all duration-300">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Form -->
+            <form onsubmit="submitJoinForm(event)" class="p-8 space-y-6">
+                <!-- Ism va Familiya -->
+                <div class="relative group">
+                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-200 mb-2">
+                        <span class="flex items-center gap-2">
+                            <span class="w-8 h-8 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-user text-white text-sm"></i>
+                            </span>
+                            Ism va Familiya
+                        </span>
+                    </label>
+                    <div class="relative">
+                        <input type="text" id="joinFullName" required 
+                               class="w-full px-5 py-4 pl-12 rounded-xl border-2 border-gray-200 dark:border-gray-600 focus:outline-none focus:border-purple-500 focus:ring-4 focus:ring-purple-500/20 bg-white dark:bg-gray-700 text-gray-800 dark:text-white transition-all duration-300" 
+                               placeholder="Karimov Abduullo">
+                        <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-purple-600 transition-colors">
+                            <i class="fas fa-id-card text-lg"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="relative group">
+                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-200 mb-2">
+                        <span class="flex items-center gap-2">
+                            <span class="w-8 h-8 bg-gradient-to-br from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-envelope text-white text-sm"></i>
+                            </span>
+                            Email manzil
+                        </span>
+                    </label>
+                    <div class="relative">
+                        <input type="email" id="joinEmail" required 
+                               class="w-full px-5 py-4 pl-12 rounded-xl border-2 border-gray-200 dark:border-gray-600 focus:outline-none focus:border-purple-500 focus:ring-4 focus:ring-purple-500/20 bg-white dark:bg-gray-700 text-gray-800 dark:text-white transition-all duration-300" 
+                               placeholder="karimov@gmail.com">
+                        <div class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-purple-600 transition-colors">
+                            <i class="fas fa-at text-lg"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Telefon -->
+                <div class="relative group">
+                    <label class="block text-sm font-bold text-gray-700 dark:text-gray-200 mb-2">
+                        <span class="flex items-center gap-2">
+                            <span class="w-8 h-8 bg-gradient-to-br from-orange-500 to-red-500 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-phone text-white text-sm"></i>
+                            </span>
+                            Telefon raqam
+                        </span>
+                    </label>
+                    <div class="relative">
+                        <div class="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
+                            <span class="text-2xl">🇺🇿</span>
+                            <span class="text-gray-600 dark:text-gray-300 font-semibold">+998</span>
+                        </div>
+                        <input type="tel" id="joinPhone" required 
+                               class="w-full px-5 py-4 pl-28 rounded-xl border-2 border-gray-200 dark:border-gray-600 focus:outline-none focus:border-purple-500 focus:ring-4 focus:ring-purple-500/20 bg-white dark:bg-gray-700 text-gray-800 dark:text-white transition-all duration-300" 
+                               placeholder="90 123 45 67"
+                               oninput="formatPhoneNumber(this)">
+                        <div class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-purple-600 transition-colors">
+                            <i class="fas fa-mobile-alt text-lg"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <input type="hidden" id="selectedCircle" value="">
+
+                <!-- Submit Button -->
+                <button type="submit" 
+                        class="w-full py-4 bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 text-white rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 relative overflow-hidden group">
+                    <span class="relative z-10 flex items-center justify-center gap-2">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>So'rov Yuborish</span>
+                    </span>
+                    <div class="absolute inset-0 bg-gradient-to-r from-pink-600 via-purple-600 to-pink-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </button>
+
+                <p class="text-xs text-center text-gray-500 dark:text-gray-400 flex items-center justify-center gap-1">
+                    <i class="fas fa-shield-alt text-purple-600"></i>
+                    <span>Admin tasdiqlaganidan so'ng sizga xabar beriladi</span>
+                </p>
+            </form>
+        </div>
+    </div>
+
     <!-- Notifications Panel -->
     <div id="notificationsPanel" class="fixed top-20 right-6 w-96 max-h-[70vh] glass rounded-2xl overflow-hidden z-50 hidden modal-enter">
         <div class="p-6 border-b border-gray-200 dark:border-gray-700">
@@ -1082,74 +1196,91 @@
 
     <script>
         // Data
-        const circlesData = [
-            {
-                id: 1,
-                title: "Python Dasturlash",
-                description: "Sun'iy intellekt va ma'lumotlar bilan ishlash asoslari",
-                image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=500",
-                members: 24,
-                schedule: "Haftada 3 kun",
-                category: "programming",
-                color: "from-blue-500 to-cyan-500",
-                isMember: false
-            },
-            {
-                id: 2,
-                title: "Speaking Club (English)",
-                description: "Ingliz tilida erkin so'zlashishni o'rganamiz",
-                image: "https://images.unsplash.com/photo-1544776193-c52f213287d9?auto=format&fit=crop&w=500",
-                members: 18,
-                schedule: "Haftada 2 kun",
-                category: "language",
-                color: "from-green-500 to-emerald-500",
-                isMember: true
-            },
-            {
-                id: 3,
-                title: "Graphic Design Pro",
-                description: "Photoshop, Illustrator va zamonaviy dizayn usullari",
-                image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=500",
-                members: 32,
-                schedule: "Haftada 2 kun",
-                category: "art",
-                color: "from-purple-500 to-pink-500",
-                isMember: false
-            },
-            {
-                id: 4,
-                title: "Web Development",
-                description: "HTML, CSS, JavaScript va React bilan zamonaviy web saytlar",
-                image: "https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=500",
-                members: 28,
-                schedule: "Haftada 3 kun",
-                category: "programming",
-                color: "from-orange-500 to-red-500",
-                isMember: false
-            },
-            {
-                id: 5,
-                title: "Russian Language",
-                description: "Rus tilini noldan professional darajagacha o'rganing",
-                image: "https://images.unsplash.com/photo-1543109740-4bdb38fda756?auto=format&fit=crop&w=500",
-                members: 22,
-                schedule: "Haftada 4 kun",
-                category: "language",
-                color: "from-indigo-500 to-blue-500",
-                isMember: false
-            },
-            {
-                id: 6,
-                title: "Robotics & AI",
-                description: "Robototexnika va sun'iy intellekt asoslari",
-                image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=500",
-                members: 15,
-                schedule: "Haftada 2 kun",
-                category: "programming",
-                color: "from-pink-500 to-rose-500",
-                isMember: false
-            }
-        ];
+        // Load circles from localStorage or use defaults
+        let circlesData = JSON.parse(localStorage.getItem('circlesData') || '[]');
+        
+        // Default circles if empty (for first time users)
+        if (circlesData.length === 0) {
+            circlesData = [
+                {
+                    id: 1,
+                    name: "Python Dasturlash",
+                    members: 24,
+                    schedule: "Dush, Chor, Jum 09:00",
+                    status: "Faol"
+                },
+                {
+                    id: 2,
+                    name: "English Speaking",
+                    members: 18,
+                    schedule: "Sesh, Pay 14:00",
+                    status: "Faol"
+                },
+                {
+                    id: 3,
+                    name: "Graphic Design",
+                    members: 32,
+                    schedule: "Sesh, Jum 10:00",
+                    status: "Faol"
+                },
+                {
+                    id: 4,
+                    name: "Web Development",
+                    members: 28,
+                    schedule: "Dush, Pay 15:00",
+                    status: "Faol"
+                },
+                {
+                    id: 5,
+                    name: "Robotics & AI",
+                    members: 15,
+                    schedule: "Chor, Shan 11:00",
+                    status: "Faol"
+                },
+                {
+                    id: 6,
+                    name: "Russian Language",
+                    members: 22,
+                    schedule: "Sesh, Pay 09:00",
+                    status: "Faol"
+                }
+            ];
+            localStorage.setItem('circlesData', JSON.stringify(circlesData));
+        }
+        
+        // Convert admin circles to display format with additional properties
+        const displayCircles = circlesData.map((circle, index) => {
+            const categories = ['programming', 'language', 'art'];
+            const colors = [
+                'from-blue-500 to-cyan-500',
+                'from-green-500 to-emerald-500',
+                'from-purple-500 to-pink-500',
+                'from-orange-500 to-red-500',
+                'from-indigo-500 to-blue-500',
+                'from-pink-500 to-rose-500'
+            ];
+            const images = [
+                'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=500',
+                'https://images.unsplash.com/photo-1544776193-c52f213287d9?auto=format&fit=crop&w=500',
+                'https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=500',
+                'https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=500',
+                'https://images.unsplash.com/photo-1543109740-4bdb38fda756?auto=format&fit=crop&w=500',
+                'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=500'
+            ];
+            
+            return {
+                id: circle.id,
+                title: circle.name,
+                description: `${circle.schedule} - ${circle.members} a'zo`,
+                image: images[index % images.length],
+                members: circle.members,
+                schedule: circle.schedule,
+                category: categories[index % categories.length],
+                color: colors[index % colors.length],
+                isMember: false,
+                status: circle.status
+            };
+        });
 
         let membersData = [
             { id: 1, firstName: "Azizov", lastName: "Anvar", email: "azizov@example.com", phone: "+998901234567", role: "Sardor", status: "Faol", progress: 85, joinDate: "12.03.2024" },
@@ -1166,7 +1297,84 @@
             initParticles();
             initScrollAnimations();
             initNavbarScroll();
+            updateNotificationBadge(); // Bildirishnomalar badge ini yangilash
+            
+            // Admin tasdiqlaganida avtomatik yangilash
+            window.addEventListener('memberApproved', (event) => {
+                const approvedMember = event.detail;
+                const userEmail = localStorage.getItem('userEmail');
+                
+                if (userEmail && approvedMember.email === userEmail) {
+                    renderCircles(document.querySelector('.filter-btn.active')?.dataset.filter || 'all');
+                    showToast(`Tabriklaymiz! Sizning so'rovingiz tasdiqlandi!`, 'success');
+                }
+            });
         });
+
+        // Har 3 soniyada yangilanadi - admin tasdiqlaganini va yangi to'garaklarni tekshirish
+        setInterval(() => {
+            // Reload circles from localStorage
+            const updatedCircles = JSON.parse(localStorage.getItem('circlesData') || '[]');
+            if (updatedCircles.length !== circlesData.length || 
+                JSON.stringify(updatedCircles) !== JSON.stringify(circlesData)) {
+                circlesData = updatedCircles;
+                
+                // Update displayCircles
+                const categories = ['programming', 'language', 'art'];
+                const colors = [
+                    'from-blue-500 to-cyan-500',
+                    'from-green-500 to-emerald-500',
+                    'from-purple-500 to-pink-500',
+                    'from-orange-500 to-red-500',
+                    'from-indigo-500 to-blue-500',
+                    'from-pink-500 to-rose-500'
+                ];
+                const images = [
+                    'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=500',
+                    'https://images.unsplash.com/photo-1544776193-c52f213287d9?auto=format&fit=crop&w=500',
+                    'https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=500',
+                    'https://images.unsplash.com/photo-1547658719-da2b51169166?auto=format&fit=crop&w=500',
+                    'https://images.unsplash.com/photo-1543109740-4bdb38fda756?auto=format&fit=crop&w=500',
+                    'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=500'
+                ];
+                
+                displayCircles.length = 0;
+                circlesData.forEach((circle, index) => {
+                    displayCircles.push({
+                        id: circle.id,
+                        title: circle.name,
+                        description: `${circle.schedule} - ${circle.members} a'zo`,
+                        image: images[index % images.length],
+                        members: circle.members,
+                        schedule: circle.schedule,
+                        category: categories[index % categories.length],
+                        color: colors[index % colors.length],
+                        isMember: false,
+                        status: circle.status
+                    });
+                });
+                
+                const activeFilter = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
+                renderCircles(activeFilter);
+                animateStats(); // Update stats too
+            }
+            
+            const userEmail = localStorage.getItem('userEmail');
+            if (userEmail) {
+                const approvedMembers = JSON.parse(localStorage.getItem('approvedMembers') || '[]');
+                const activeFilter = document.querySelector('.filter-btn.active')?.dataset.filter || 'all';
+                
+                // Har bir to'garak uchun alohida tekshirish
+                displayCircles.forEach(circle => {
+                    const isApproved = approvedMembers.some(m => m.email === userEmail && m.circle === circle.title);
+                    if (isApproved && !circle.isMember) {
+                        circle.isMember = true;
+                        renderCircles(activeFilter);
+                        showToast(`Tabriklaymiz! ${circle.title} to'garagiga a'zoligingiz tasdiqlandi!`, 'success');
+                    }
+                });
+            }
+        }, 3000);
 
         // Dark Mode Toggle
         const darkModeToggle = document.getElementById('darkModeToggle');
@@ -1183,31 +1391,82 @@
         // Render Circles
         function renderCircles(filter) {
             const grid = document.getElementById('circlesGrid');
-            const filteredCircles = filter === 'all' ? circlesData : circlesData.filter(c => c.category === filter);
+            const filteredCircles = filter === 'all' ? displayCircles : displayCircles.filter(c => c.category === filter);
             
-            grid.innerHTML = filteredCircles.map((circle, index) => `
-                <div class="glass rounded-2xl overflow-hidden card-3d glow stagger-item" style="animation-delay: ${index * 0.1}s">
-                    <div class="relative overflow-hidden group">
-                        <img src="${circle.image}" alt="${circle.title}" class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
-                        <div class="absolute top-4 right-4">
-                            <span class="px-3 py-1 bg-gradient-to-r ${circle.color} text-white rounded-full text-xs font-bold">${getCategoryName(circle.category)}</span>
+            // Faqat faol to'garaklarni ko'rsatish
+            const activeCircles = filteredCircles.filter(c => c.status === 'Faol');
+            
+            // Agar to'garaklar bo'lmasa
+            if (activeCircles.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center py-20">
+                        <div class="glass rounded-3xl p-12 max-w-md mx-auto">
+                            <i class="fas fa-inbox text-6xl text-gray-300 dark:text-gray-600 mb-4"></i>
+                            <h3 class="text-2xl font-bold text-gray-800 dark:text-white mb-2">To'garaklar topilmadi</h3>
+                            <p class="text-gray-600 dark:text-gray-400">Hozircha bu kategoriyada faol to'garaklar yo'q</p>
                         </div>
                     </div>
-                    <div class="p-6">
-                        <h3 class="text-2xl font-bold text-gray-800 dark:text-white mb-2">${circle.title}</h3>
-                        <p class="text-gray-600 dark:text-gray-400 mb-4">${circle.description}</p>
-                        <div class="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-4">
-                            <span><i class="fas fa-users mr-2 text-purple-600"></i>${circle.members} a'zo</span>
-                            <span><i class="fas fa-clock mr-2 text-purple-600"></i>${circle.schedule}</span>
+                `;
+                return;
+            }
+            
+            // Foydalanuvchi statusini tekshirish
+            const approvedMembers = JSON.parse(localStorage.getItem('approvedMembers') || '[]');
+            const requests = JSON.parse(localStorage.getItem('joinRequests') || '[]');
+            const userEmail = localStorage.getItem('userEmail');
+            
+            grid.innerHTML = activeCircles.map((circle, index) => {
+                let buttonHTML = '';
+                
+                if (userEmail) {
+                    // Faqat shu to'garak uchun tekshirish
+                    const isApproved = approvedMembers.some(m => m.email === userEmail && m.circle === circle.title);
+                    const hasPendingRequest = requests.some(r => r.email === userEmail && r.circle === circle.title);
+                    
+                    if (isApproved) {
+                        buttonHTML = `<button onclick="showToast('Siz ${circle.title} to\'garagining a\'zosisiz!', 'success')" 
+                                class="w-full py-3 bg-green-600 text-white rounded-xl font-semibold cursor-default">
+                                <i class="fas fa-check-circle mr-2"></i>Siz a'zosiz
+                            </button>`;
+                    } else if (hasPendingRequest) {
+                        buttonHTML = `<button onclick="showToast('So\'rovingiz kutilmoqda. Admin tez orada tasdiqlaydi.', 'info')" 
+                                class="w-full py-3 bg-yellow-500 text-white rounded-xl font-semibold cursor-default">
+                                <i class="fas fa-clock mr-2"></i>So'rov kutilmoqda
+                            </button>`;
+                    } else {
+                        buttonHTML = `<button onclick="joinCircle(${circle.id})" 
+                                class="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold hover:scale-105 transition-transform glow relative overflow-hidden">
+                                <i class="fas fa-user-plus mr-2"></i>A'zo bo'lish
+                            </button>`;
+                    }
+                } else {
+                    buttonHTML = `<button onclick="joinCircle(${circle.id})" 
+                            class="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold hover:scale-105 transition-transform glow relative overflow-hidden">
+                            <i class="fas fa-user-plus mr-2"></i>A'zo bo'lish
+                        </button>`;
+                }
+                
+                return `
+                    <div class="glass rounded-2xl overflow-hidden card-3d glow stagger-item" style="animation-delay: ${index * 0.1}s">
+                        <div class="relative overflow-hidden group">
+                            <img src="${circle.image}" alt="${circle.title}" class="w-full h-56 object-cover group-hover:scale-110 transition-transform duration-500">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-0 group-hover:opacity-60 transition-opacity duration-300"></div>
+                            <div class="absolute top-4 right-4">
+                                <span class="px-3 py-1 bg-gradient-to-r ${circle.color} text-white rounded-full text-xs font-bold">${getCategoryName(circle.category)}</span>
+                            </div>
                         </div>
-                        <button onclick="${circle.isMember ? 'showToast(\"Siz allaqachon a\'zosiz!\", \"info\")' : `joinCircle(${circle.id})`}" 
-                                class="w-full py-3 ${circle.isMember ? 'bg-green-600' : 'bg-gradient-to-r from-purple-600 to-pink-600'} text-white rounded-xl font-semibold hover:scale-105 transition-transform glow relative overflow-hidden">
-                            ${circle.isMember ? '<i class="fas fa-check mr-2"></i>Siz a\'zosiz' : 'A\'zo bo\'lish'}
-                        </button>
+                        <div class="p-6">
+                            <h3 class="text-2xl font-bold text-gray-800 dark:text-white mb-2">${circle.title}</h3>
+                            <p class="text-gray-600 dark:text-gray-400 mb-4">${circle.description}</p>
+                            <div class="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400 mb-4">
+                                <span><i class="fas fa-users mr-2 text-purple-600"></i>${circle.members} a'zo</span>
+                                <span><i class="fas fa-clock mr-2 text-purple-600"></i>${circle.schedule}</span>
+                            </div>
+                            ${buttonHTML}
+                        </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
         function getCategoryName(category) {
@@ -1291,9 +1550,17 @@
 
         // Animate Stats
         function animateStats() {
-            animateValue('stat1', 0, 42, 2000);
-            animateValue('stat2', 0, 1247, 2000);
-            animateValue('stat3', 0, 856, 2000);
+            // Get real data from localStorage
+            const circles = JSON.parse(localStorage.getItem('circlesData') || '[]');
+            const members = JSON.parse(localStorage.getItem('approvedMembers') || '[]');
+            
+            const activeCircles = circles.filter(c => c.status === 'Faol').length || 6;
+            const totalMembers = members.length || 0;
+            const graduates = Math.floor(totalMembers * 0.7); // 70% bitiruvchilar
+            
+            animateValue('stat1', 0, activeCircles, 2000);
+            animateValue('stat2', 0, totalMembers, 2000);
+            animateValue('stat3', 0, graduates, 2000);
         }
 
         function animateValue(id, start, end, duration) {
@@ -1505,67 +1772,59 @@
             }
         }
 
-        // Notifications
-        let notificationsData = [
-            { id: 1, title: "Yangi a'zo qo'shildi", message: "Karimova Dilnoza Python to'garagiga qo'shildi", time: "5 daqiqa oldin", icon: "fa-user-plus", color: "from-blue-500 to-cyan-500", read: false },
-            { id: 2, title: "To'garak boshlanadi", message: "English Speaking darsi 1 soatdan keyin boshlanadi", time: "1 soat oldin", icon: "fa-clock", color: "from-green-500 to-emerald-500", read: false },
-            { id: 3, title: "Yutuq!", message: "Rustamov Jasur 100% progressga yetdi", time: "2 soat oldin", icon: "fa-trophy", color: "from-yellow-500 to-orange-500", read: false },
-            { id: 4, title: "Tizim yangilandi", message: "Yangi funksiyalar qo'shildi", time: "1 kun oldin", icon: "fa-sync", color: "from-purple-500 to-pink-500", read: true }
-        ];
-
+        // Notifications - localStorage dan foydalanadi
         function showNotifications() {
             const panel = document.getElementById('notificationsPanel');
-            panel.classList.toggle('hidden');
-            renderNotifications();
+            if (panel) {
+                panel.classList.toggle('hidden');
+                renderNotifications();
+            }
         }
 
         function renderNotifications() {
+            const requests = JSON.parse(localStorage.getItem('joinRequests') || '[]');
             const list = document.getElementById('notificationsList');
             
-            if (notificationsData.length === 0) {
-                list.innerHTML = '<div class="p-8 text-center text-gray-500 dark:text-gray-400"><i class="fas fa-bell-slash text-4xl mb-4"></i><p>Bildirishnomalar yo\'q</p></div>';
+            if (!list) return;
+            
+            if (requests.length === 0) {
+                list.innerHTML = '<div class="p-8 text-center text-gray-500 dark:text-gray-400"><i class="fas fa-bell-slash text-4xl mb-4"></i><p>Hozircha bildirishnomalar yo\'q</p></div>';
                 return;
             }
             
-            list.innerHTML = notificationsData.map(notif => `
-                <div class="p-4 border-b border-gray-200 dark:border-gray-700 hover:bg-white dark:hover:bg-gray-800 transition-colors cursor-pointer ${!notif.read ? 'bg-purple-50 dark:bg-purple-900/20' : ''}" onclick="markAsRead(${notif.id})">
+            list.innerHTML = requests.map((request, index) => `
+                <div class="p-4 border-b border-gray-200 dark:border-gray-700 hover:bg-white dark:hover:bg-gray-800 transition-colors">
                     <div class="flex items-start gap-3">
-                        <div class="w-10 h-10 bg-gradient-to-r ${notif.color} rounded-full flex items-center justify-center flex-shrink-0">
-                            <i class="fas ${notif.icon} text-white"></i>
+                        <div class="w-10 h-10 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center flex-shrink-0">
+                            <i class="fas fa-user-plus text-white"></i>
                         </div>
                         <div class="flex-1">
-                            <h4 class="font-semibold text-gray-800 dark:text-white text-sm mb-1">${notif.title}</h4>
-                            <p class="text-gray-600 dark:text-gray-400 text-xs mb-1">${notif.message}</p>
-                            <span class="text-gray-400 text-xs">${notif.time}</span>
+                            <h4 class="font-semibold text-gray-800 dark:text-white text-sm mb-1">${request.name}</h4>
+                            <p class="text-gray-600 dark:text-gray-400 text-xs mb-1">${request.email} | ${request.phone}</p>
+                            <p class="text-gray-400 text-xs"><i class="fas fa-clock mr-1"></i>${request.timestamp}</p>
+                            ${request.circle ? `<p class="text-xs text-purple-600 mt-1"><i class="fas fa-layer-group mr-1"></i>${request.circle}</p>` : ''}
+                            <span class="inline-block mt-2 px-2 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300 rounded text-xs font-bold">
+                                Kutilmoqda
+                            </span>
                         </div>
-                        ${!notif.read ? '<div class="w-2 h-2 bg-purple-600 rounded-full"></div>' : ''}
                     </div>
                 </div>
             `).join('');
         }
 
-        function markAsRead(id) {
-            const notif = notificationsData.find(n => n.id === id);
-            if (notif) {
-                notif.read = true;
-                renderNotifications();
-                updateNotificationBadge();
-            }
-        }
-
         function clearNotifications() {
-            notificationsData = [];
+            localStorage.removeItem('joinRequests');
             renderNotifications();
             updateNotificationBadge();
             showToast("Barcha bildirishnomalar o'chirildi", "success");
         }
 
         function updateNotificationBadge() {
-            const unreadCount = notificationsData.filter(n => !n.read).length;
+            const requests = JSON.parse(localStorage.getItem('joinRequests') || '[]');
             const badge = document.querySelector('.fa-bell').parentElement.querySelector('span');
             if (badge) {
-                if (unreadCount > 0) {
-                    badge.textContent = unreadCount;
+                if (requests.length > 0) {
+                    badge.textContent = requests.length;
                     badge.classList.remove('hidden');
                 } else {
                     badge.classList.add('hidden');
@@ -1573,28 +1832,74 @@
             }
         }
 
+        // Tashqariga bosganda bildirishnomalar panelini yopish
+        document.addEventListener('click', function(e) {
+            const panel = document.getElementById('notificationsPanel');
+            const notifButton = e.target.closest('[onclick="showNotifications()"]');
+            
+            if (panel && !panel.classList.contains('hidden') && 
+                !panel.contains(e.target) && 
+                !notifButton) {
+                panel.classList.add('hidden');
+            }
+        });
+
         // Form Submissions
         function submitJoinForm(e) {
             e.preventDefault();
             
-            const name = document.getElementById('joinName').value;
+            const fullName = document.getElementById('joinFullName').value;
             const email = document.getElementById('joinEmail').value;
-            const phone = document.getElementById('joinPhone').value;
+            const phoneInput = document.getElementById('joinPhone').value;
+            const circle = document.getElementById('selectedCircle').value;
             
-            // Save to localStorage
+            // Telefon raqamni to'liq formatda saqlash
+            const phone = '+998 ' + phoneInput;
+            
+            // Email ni saqlash - keyin tekshirish uchun
+            localStorage.setItem('userEmail', email);
+            
+            // So'rovni localStorage ga saqlash - ADMIN PANELGA YUBORISH
             const requests = JSON.parse(localStorage.getItem('joinRequests') || '[]');
             requests.push({
-                name: name,
+                name: fullName,
                 email: email,
                 phone: phone,
+                circle: circle,
                 timestamp: new Date().toLocaleString('uz-UZ'),
                 status: 'Kutilmoqda'
             });
             localStorage.setItem('joinRequests', JSON.stringify(requests));
             
             closeJoinModal();
-            showToast("So'rov muvaffaqiyatli yuborildi! Admin tez orada tasdiqlaydi.", "success");
-            e.target.reset();
+            showToast(`So'rov yuborildi! ${circle} to'garagiga qo'shilish uchun admin tasdiqlashi kerak.`, "success");
+        }
+
+        // Telefon raqamni formatlash
+        function formatPhoneNumber(input) {
+            let value = input.value.replace(/\D/g, ''); // Faqat raqamlar
+            
+            // Maksimal 9 ta raqam (90 123 45 67)
+            if (value.length > 9) {
+                value = value.substring(0, 9);
+            }
+            
+            // Formatlash: 90 123 45 67
+            let formatted = '';
+            if (value.length > 0) {
+                formatted = value.substring(0, 2);
+            }
+            if (value.length > 2) {
+                formatted += ' ' + value.substring(2, 5);
+            }
+            if (value.length > 5) {
+                formatted += ' ' + value.substring(5, 7);
+            }
+            if (value.length > 7) {
+                formatted += ' ' + value.substring(7, 9);
+            }
+            
+            input.value = formatted;
         }
 
         function submitAddMember(e) {
@@ -1621,12 +1926,57 @@
 
         // Member Actions
         function joinCircle(circleId) {
-            const circle = circlesData.find(c => c.id === circleId);
-            if (circle) {
-                circle.isMember = true;
-                circle.members++;
-                renderCircles(document.querySelector('.filter-btn.active')?.dataset.filter || 'all');
-                showToast(`Siz ${circle.title} to'garagiga qo'shildingiz!`, "success");
+            const circle = displayCircles.find(c => c.id === circleId);
+            if (!circle) return;
+            
+            // Agar allaqachon a'zo bo'lsa
+            const approvedMembers = JSON.parse(localStorage.getItem('approvedMembers') || '[]');
+            const requests = JSON.parse(localStorage.getItem('joinRequests') || '[]');
+            const userEmail = localStorage.getItem('userEmail');
+            
+            if (userEmail) {
+                // Faqat shu to'garak uchun tekshirish
+                const isApproved = approvedMembers.some(m => m.email === userEmail && m.circle === circle.title);
+                const hasPendingRequest = requests.some(r => r.email === userEmail && r.circle === circle.title);
+                
+                if (isApproved) {
+                    showToast(`Siz ${circle.title} to'garagining a'zosisiz!`, "success");
+                    return;
+                }
+                
+                if (hasPendingRequest) {
+                    showToast("Sizning so'rovingiz kutilmoqda. Admin tasdiqlashi kerak.", "info");
+                    return;
+                }
+            }
+            
+            // Modalni ochish
+            openJoinModal(circle);
+        }
+
+        function openJoinModal(circle) {
+            const modal = document.getElementById('joinModal');
+            const circleNameElement = document.getElementById('modalCircleName');
+            const selectedCircleInput = document.getElementById('selectedCircle');
+            
+            if (modal) {
+                if (circleNameElement) {
+                    circleNameElement.textContent = circle.title;
+                }
+                if (selectedCircleInput) {
+                    selectedCircleInput.value = circle.title;
+                }
+                modal.classList.remove('hidden');
+            }
+        }
+
+        function closeJoinModal() {
+            const modal = document.getElementById('joinModal');
+            if (modal) {
+                modal.classList.add('hidden');
+                // Formani tozalash
+                const form = modal.querySelector('form');
+                if (form) form.reset();
             }
         }
 
@@ -1686,7 +2036,46 @@
         }
 
         function showNotifications() {
-            showToast("3 ta yangi bildirishnoma bor", "info");
+            const panel = document.getElementById('notificationsPanel');
+            if (panel) {
+                panel.classList.toggle('hidden');
+                renderNotifications();
+            }
+        }
+
+        function renderNotifications() {
+            const requests = JSON.parse(localStorage.getItem('joinRequests') || '[]');
+            const list = document.getElementById('notificationsList');
+            
+            if (!list) return;
+            
+            if (requests.length === 0) {
+                list.innerHTML = `
+                    <div class="text-center py-12 text-gray-500">
+                        <i class="fas fa-bell-slash text-5xl mb-4 text-gray-300"></i>
+                        <p class="text-lg">Hozircha bildirishnomalar yo'q</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            list.innerHTML = requests.map((request, index) => `
+                <div class="p-4 border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                    <div class="flex items-start gap-3">
+                        <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold flex-shrink-0">
+                            ${request.name.split(' ').map(n => n[0]).join('')}
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-gray-800 dark:text-white">${request.name}</h4>
+                            <p class="text-sm text-gray-600 dark:text-gray-400">${request.email}</p>
+                            <p class="text-xs text-gray-500 mt-1"><i class="fas fa-clock mr-1"></i>${request.timestamp}</p>
+                            <span class="inline-block mt-2 px-2 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-700 dark:text-yellow-300 rounded text-xs font-bold">
+                                Kutilmoqda
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
         }
 
         function openProfileModal() {

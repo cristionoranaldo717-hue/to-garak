@@ -22,18 +22,20 @@
     </script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; }
+        body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
         
         .glass {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
         
         .dark .glass {
-            background: rgba(15, 23, 42, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
         
         .gradient-text {
@@ -41,6 +43,13 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            animation: gradientShift 3s ease infinite;
+            background-size: 200% 200%;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
         
         @keyframes slideIn {
@@ -48,58 +57,242 @@
             to { transform: translateX(0); opacity: 1; }
         }
         
-        .slide-in { animation: slideIn 0.4s ease-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-20px); }
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        
+        .slide-in { animation: slideIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+        .fade-in { animation: fadeIn 0.6s ease-out; }
+        .float { animation: float 3s ease-in-out infinite; }
         
         .card-hover {
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card-hover::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .card-hover:hover::before {
+            left: 100%;
         }
         
         .card-hover:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(102, 126, 234, 0.3);
         }
         
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.1); }
+        .btn-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-size: 200% 200%;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-gradient:hover {
+            background-position: right center;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-gradient:active {
+            transform: translateY(0);
+        }
+        
+        .nav-btn {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-btn::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+        }
+        
+        .nav-btn:hover::after {
+            width: 100%;
+        }
+        
+        .stat-card {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+        
+        .loading-spinner {
+            border: 3px solid rgba(102, 126, 234, 0.2);
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .badge-pulse {
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        .table-row {
+            transition: all 0.3s ease;
+        }
+        
+        .table-row:hover {
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.05), rgba(118, 75, 162, 0.05));
+            transform: scale(1.01);
+        }
+        
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { 
+            background: rgba(15, 23, 42, 0.1);
+            border-radius: 10px;
+        }
         ::-webkit-scrollbar-thumb {
             background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 4px;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #764ba2, #f093fb);
+        }
+        
+        .input-focus {
+            transition: all 0.3s ease;
+        }
+        
+        .input-focus:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+        }
+        
+        .icon-rotate {
+            transition: transform 0.3s ease;
+        }
+        
+        .icon-rotate:hover {
+            transform: rotate(360deg);
+        }
+        
+        .gradient-border {
+            position: relative;
+            background: linear-gradient(white, white) padding-box,
+                        linear-gradient(135deg, #667eea, #764ba2, #f093fb) border-box;
+            border: 2px solid transparent;
+        }
+        
+        .dark .gradient-border {
+            background: linear-gradient(#1f2937, #1f2937) padding-box,
+                        linear-gradient(135deg, #667eea, #764ba2, #f093fb) border-box;
         }
     </style>
 </head>
 <body class="bg-gray-50 dark:bg-gray-900">
 
     <!-- Login Screen -->
-    <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4">
+    <div id="loginScreen" class="min-h-screen flex items-center justify-center p-4 relative overflow-hidden">
         <div class="absolute inset-0 bg-gradient-to-br from-purple-600 via-blue-600 to-pink-600"></div>
-        <div class="relative glass rounded-3xl p-8 max-w-md w-full shadow-2xl">
+        
+        <!-- Animated Background Circles -->
+        <div class="absolute top-20 left-20 w-72 h-72 bg-purple-400 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
+        <div class="absolute top-40 right-20 w-72 h-72 bg-pink-400 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" style="animation-delay: 1s;"></div>
+        <div class="absolute bottom-20 left-1/2 w-72 h-72 bg-blue-400 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" style="animation-delay: 2s;"></div>
+        
+        <div class="relative glass rounded-3xl p-8 max-w-md w-full shadow-2xl fade-in">
             <div class="text-center mb-8">
-                <div class="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center">
+                <div class="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center float shadow-lg">
                     <i class="fas fa-shield-alt text-white text-3xl"></i>
                 </div>
                 <h1 class="text-3xl font-bold gradient-text mb-2">Admin Panel</h1>
-                <p class="text-gray-600 dark:text-gray-300">EduClub Pro Boshqaruv Tizimi</p>
+                <p class="text-white font-medium">EduClub Pro Boshqaruv Tizimi</p>
             </div>
             
             <form onsubmit="handleLogin(event)" class="space-y-4">
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Email</label>
-                    <input type="email" id="loginEmail" value="admin@educlub.uz" required 
-                           class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-800 text-gray-800 dark:text-white">
+                    <label class="block text-sm font-semibold text-white mb-2">
+                        <i class="fas fa-envelope mr-2 text-purple-300"></i>Email
+                    </label>
+                    <input type="email" id="loginEmail" placeholder="Email manzilingizni kiriting" required 
+                           class="input-focus w-full px-4 py-3 rounded-xl border-2 border-transparent focus:border-purple-400 focus:outline-none bg-white/90 dark:bg-gray-800/90 text-gray-800 dark:text-white">
                 </div>
                 <div>
-                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">Parol</label>
-                    <input type="password" id="loginPassword" value="admin123" required 
-                           class="w-full px-4 py-3 rounded-xl border border-gray-300 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-800 text-gray-800 dark:text-white">
+                    <label class="block text-sm font-semibold text-white mb-2">
+                        <i class="fas fa-lock mr-2 text-purple-300"></i>Parol
+                    </label>
+                    <input type="password" id="loginPassword" placeholder="Parolni kiriting" required 
+                           class="input-focus w-full px-4 py-3 rounded-xl border-2 border-transparent focus:border-purple-400 focus:outline-none bg-white/90 dark:bg-gray-800/90 text-gray-800 dark:text-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-white mb-2">
+                        <i class="fas fa-key mr-2 text-orange-300"></i>Xavfsizlik Kodi
+                    </label>
+                    <input type="password" id="loginSecretKey" placeholder="Maxfiy kodni kiriting" required 
+                           class="input-focus w-full px-4 py-3 rounded-xl border-2 border-transparent focus:border-purple-400 focus:outline-none bg-white/90 dark:bg-gray-800/90 text-gray-800 dark:text-white">
+                    <p class="text-xs text-purple-100 mt-1">
+                        <i class="fas fa-info-circle mr-1"></i>Bu kod faqat sizda bo'lishi kerak
+                    </p>
                 </div>
                 <button type="submit" 
-                        class="w-full py-4 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-bold text-lg hover:shadow-2xl hover:scale-105 transition-all">
-                    <i class="fas fa-sign-in-alt mr-2"></i>Kirish
+                        class="btn-gradient w-full py-4 text-white rounded-xl font-bold text-lg shadow-2xl">
+                    <i class="fas fa-shield-alt mr-2"></i>Kirish
                 </button>
             </form>
             
             <div class="mt-6 text-center">
-                <a href="index.html" class="text-purple-600 hover:text-purple-800 font-semibold">
+                <a href="index.html" class="text-white hover:text-purple-200 font-semibold transition-colors">
                     <i class="fas fa-arrow-left mr-2"></i>Foydalanuvchi Sahifasiga Qaytish
                 </a>
             </div>
@@ -123,28 +316,28 @@
             </div>
             
             <nav class="p-4 space-y-2">
-                <button onclick="showSection('dashboard')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 font-semibold">
+                <button onclick="showSection('dashboard', event)" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 font-semibold">
                     <i class="fas fa-chart-line w-5"></i>
                     <span>Dashboard</span>
                 </button>
-                <button onclick="showSection('requests')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-semibold transition">
+                <button onclick="showSection('requests', event)" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-semibold transition">
                     <i class="fas fa-bell w-5"></i>
                     <span>So'rovlar</span>
                     <span id="requestBadge" class="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full hidden">0</span>
                 </button>
-                <button onclick="showSection('members')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-semibold transition">
+                <button onclick="showSection('members', event)" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-semibold transition">
                     <i class="fas fa-users w-5"></i>
                     <span>A'zolar</span>
                 </button>
-                <button onclick="showSection('circles')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-semibold transition">
+                <button onclick="showSection('circles', event)" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-semibold transition">
                     <i class="fas fa-layer-group w-5"></i>
                     <span>To'garaklar</span>
                 </button>
-                <button onclick="showSection('analytics')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-semibold transition">
+                <button onclick="showSection('analytics', event)" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-semibold transition">
                     <i class="fas fa-chart-bar w-5"></i>
                     <span>Tahlillar</span>
                 </button>
-                <button onclick="showSection('settings')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-semibold transition">
+                <button onclick="showSection('settings', event)" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-semibold transition">
                     <i class="fas fa-cog w-5"></i>
                     <span>Sozlamalar</span>
                 </button>
@@ -167,12 +360,12 @@
                     <p class="text-gray-600 dark:text-gray-400">Xush kelibsiz, Admin!</p>
                 </div>
                 <div class="flex items-center gap-4">
-                    <button onclick="toggleDarkMode()" class="w-10 h-10 rounded-full glass flex items-center justify-center hover:scale-110 transition">
-                        <i class="fas fa-moon dark:hidden"></i>
-                        <i class="fas fa-sun hidden dark:block"></i>
+                    <button onclick="toggleDarkMode()" class="w-10 h-10 rounded-full glass flex items-center justify-center hover:scale-110 transition icon-rotate">
+                        <i class="fas fa-moon dark:hidden text-gray-700"></i>
+                        <i class="fas fa-sun hidden dark:block text-yellow-400"></i>
                     </button>
-                    <div class="flex items-center gap-3 glass px-4 py-2 rounded-full">
-                        <div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                    <div class="flex items-center gap-3 glass px-4 py-2 rounded-full hover:shadow-lg transition">
+                        <div class="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-500 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-lg">
                             AK
                         </div>
                         <span class="text-gray-700 dark:text-gray-200 font-semibold">Admin</span>
@@ -182,58 +375,62 @@
 
             <!-- Stats Cards -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg card-hover">
+                <div class="stat-card bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg card-hover gradient-border">
                     <div class="flex items-center justify-between mb-4">
-                        <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center">
+                        <div class="w-14 h-14 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-xl flex items-center justify-center shadow-lg">
                             <i class="fas fa-users text-white text-2xl"></i>
                         </div>
-                        <span class="text-green-500 font-bold text-sm"><i class="fas fa-arrow-up mr-1"></i>+12%</span>
+                        <span class="text-green-500 font-bold text-sm bg-green-50 dark:bg-green-900/30 px-3 py-1 rounded-full">
+                            <i class="fas fa-arrow-up mr-1"></i>+12%
+                        </span>
                     </div>
                     <h3 class="text-3xl font-bold text-gray-800 dark:text-white mb-1" id="totalMembers">0</h3>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm">Jami A'zolar</p>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm font-medium">Jami A'zolar</p>
                 </div>
 
-                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg card-hover">
+                <div class="stat-card bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg card-hover gradient-border">
                     <div class="flex items-center justify-between mb-4">
-                        <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
+                        <div class="w-14 h-14 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center shadow-lg">
                             <i class="fas fa-bell text-white text-2xl"></i>
                         </div>
-                        <span id="pendingRequests" class="bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold">0</span>
+                        <span id="pendingRequests" class="badge-pulse bg-red-500 text-white px-3 py-1 rounded-full text-xs font-bold shadow-lg">0</span>
                     </div>
                     <h3 class="text-3xl font-bold text-gray-800 dark:text-white mb-1" id="totalRequests">0</h3>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm">Kutilayotgan So'rovlar</p>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm font-medium">Kutilayotgan So'rovlar</p>
                 </div>
 
-                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg card-hover">
+                <div class="stat-card bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg card-hover gradient-border">
                     <div class="flex items-center justify-between mb-4">
-                        <div class="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center">
+                        <div class="w-14 h-14 bg-gradient-to-br from-green-500 to-emerald-500 rounded-xl flex items-center justify-center shadow-lg">
                             <i class="fas fa-check-circle text-white text-2xl"></i>
                         </div>
-                        <span class="text-green-500 font-bold text-sm"><i class="fas fa-arrow-up mr-1"></i>+24%</span>
+                        <span class="text-green-500 font-bold text-sm bg-green-50 dark:bg-green-900/30 px-3 py-1 rounded-full">
+                            <i class="fas fa-arrow-up mr-1"></i>+24%
+                        </span>
                     </div>
                     <h3 class="text-3xl font-bold text-gray-800 dark:text-white mb-1" id="approvedMembers">0</h3>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm">Tasdiqlangan</p>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm font-medium">Tasdiqlangan</p>
                 </div>
 
-                <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg card-hover">
+                <div class="stat-card bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-lg card-hover gradient-border">
                     <div class="flex items-center justify-between mb-4">
-                        <div class="w-14 h-14 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center">
+                        <div class="w-14 h-14 bg-gradient-to-br from-orange-500 to-red-500 rounded-xl flex items-center justify-center shadow-lg">
                             <i class="fas fa-layer-group text-white text-2xl"></i>
                         </div>
-                        <span class="text-yellow-500 font-bold text-sm">6</span>
+                        <span class="text-yellow-500 font-bold text-sm bg-yellow-50 dark:bg-yellow-900/30 px-3 py-1 rounded-full">6</span>
                     </div>
                     <h3 class="text-3xl font-bold text-gray-800 dark:text-white mb-1">6</h3>
-                    <p class="text-gray-600 dark:text-gray-400 text-sm">Faol To'garaklar</p>
+                    <p class="text-gray-600 dark:text-gray-400 text-sm font-medium">Faol To'garaklar</p>
                 </div>
             </div>
 
             <!-- Requests Section -->
-            <div id="requestsSection" class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-8">
+            <div id="requestsSection" class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 mb-8 fade-in gradient-border">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold text-gray-800 dark:text-white">
                         <i class="fas fa-bell text-purple-600 mr-2"></i>Yangi So'rovlar
                     </h2>
-                    <button onclick="clearAllRequests()" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition text-sm font-semibold">
+                    <button onclick="clearAllRequests()" class="btn-gradient px-4 py-2 text-white rounded-lg transition text-sm font-semibold shadow-lg">
                         <i class="fas fa-trash mr-2"></i>Barchasini O'chirish
                     </button>
                 </div>
@@ -243,16 +440,16 @@
             </div>
 
             <!-- Members Table -->
-            <div id="membersSection" class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+            <div id="membersSection" class="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 fade-in gradient-border">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold text-gray-800 dark:text-white">
                         <i class="fas fa-users text-purple-600 mr-2"></i>A'zolar Ro'yxati
                     </h2>
                     <div class="flex gap-3">
                         <input type="text" id="searchMembers" placeholder="A'zo qidirish..." 
-                               class="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-white" 
+                               class="input-focus px-4 py-2 border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:border-purple-500 bg-white dark:bg-gray-700 text-gray-800 dark:text-white" 
                                oninput="searchMembersList()">
-                        <button onclick="exportMembersCSV()" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:shadow-lg transition text-sm font-semibold">
+                        <button onclick="exportMembersCSV()" class="btn-gradient px-4 py-2 text-white rounded-lg transition text-sm font-semibold shadow-lg">
                             <i class="fas fa-download mr-2"></i>Export CSV
                         </button>
                     </div>
@@ -277,17 +474,85 @@
             </div>
 
             <!-- Circles Section -->
-            <div id="circlesSection" class="hidden bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+            <div id="circlesSection" class="hidden bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 fade-in gradient-border">
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-2xl font-bold text-gray-800 dark:text-white">
                         <i class="fas fa-layer-group text-purple-600 mr-2"></i>To'garaklar Boshqaruvi
                     </h2>
-                    <button onclick="showAddCircleForm()" class="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:shadow-lg transition text-sm font-semibold">
+                    <button onclick="showAddCircleModal()" class="btn-gradient px-4 py-2 text-white rounded-lg transition text-sm font-semibold shadow-lg">
                         <i class="fas fa-plus mr-2"></i>Yangi To'garak
                     </button>
                 </div>
                 <div id="circlesList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <!-- Circles will be rendered here -->
+                </div>
+            </div>
+            
+            <!-- Circle Modal -->
+            <div id="circleModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+                <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" onclick="closeCircleModal()"></div>
+                <div class="relative glass rounded-3xl p-8 max-w-2xl w-full shadow-2xl fade-in">
+                    <button onclick="closeCircleModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 flex items-center justify-center transition">
+                        <i class="fas fa-times text-gray-600 dark:text-gray-300"></i>
+                    </button>
+                    
+                    <h3 class="text-2xl font-bold gradient-text mb-6" id="circleModalTitle">Yangi To'garak Qo'shish</h3>
+                    
+                    <form id="circleForm" class="space-y-6">
+                        <input type="hidden" id="circleIndex" value="">
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
+                                <i class="fas fa-tag mr-2 text-purple-600"></i>To'garak Nomi
+                            </label>
+                            <input type="text" id="circleName" required 
+                                   class="input-focus w-full px-4 py-3 rounded-xl border-2 border-gray-300 dark:border-gray-600 focus:border-purple-500 focus:outline-none bg-white dark:bg-gray-700 text-gray-800 dark:text-white"
+                                   placeholder="Masalan: Python Dasturlash">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
+                                <i class="fas fa-users mr-2 text-purple-600"></i>A'zolar Soni
+                            </label>
+                            <input type="number" id="circleMembers" required min="0" 
+                                   class="input-focus w-full px-4 py-3 rounded-xl border-2 border-gray-300 dark:border-gray-600 focus:border-purple-500 focus:outline-none bg-white dark:bg-gray-700 text-gray-800 dark:text-white"
+                                   placeholder="0">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-2">
+                                <i class="fas fa-clock mr-2 text-purple-600"></i>Dars Jadvali
+                            </label>
+                            <input type="text" id="circleSchedule" required 
+                                   class="input-focus w-full px-4 py-3 rounded-xl border-2 border-gray-300 dark:border-gray-600 focus:border-purple-500 focus:outline-none bg-white dark:bg-gray-700 text-gray-800 dark:text-white"
+                                   placeholder="Masalan: Dush, Chor, Jum 09:00">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200 mb-3">
+                                <i class="fas fa-toggle-on mr-2 text-purple-600"></i>Status
+                            </label>
+                            <div class="flex gap-4">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="circleStatus" value="Faol" checked class="w-5 h-5 text-purple-600">
+                                    <span class="text-gray-700 dark:text-gray-200 font-medium">Faol</span>
+                                </label>
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="radio" name="circleStatus" value="Nofaol" class="w-5 h-5 text-purple-600">
+                                    <span class="text-gray-700 dark:text-gray-200 font-medium">Nofaol</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="flex gap-3 pt-4">
+                            <button type="submit" class="btn-gradient flex-1 py-3 text-white rounded-xl font-bold text-lg shadow-lg">
+                                <i class="fas fa-save mr-2"></i>Saqlash
+                            </button>
+                            <button type="button" onclick="closeCircleModal()" class="flex-1 py-3 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-xl font-bold text-lg hover:bg-gray-400 dark:hover:bg-gray-500 transition">
+                                <i class="fas fa-times mr-2"></i>Bekor qilish
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
 
@@ -361,6 +626,14 @@
     </div>
 
     <script>
+        // Admin ma'lumotlari - MAXFIY!
+        // DIQQAT: Haqiqiy loyihada bu ma'lumotlar server tomonida saqlanishi kerak!
+        const ADMIN_CREDENTIALS = {
+            email: 'admin@togarak.uz',
+            password: '1', // Kuchli parol - O'ZGARTIRING!
+            secretKey: '1' // Qo'shimcha xavfsizlik - O'ZGARTIRING!
+        };
+
         // Initialize data from localStorage
         let joinRequests = JSON.parse(localStorage.getItem('joinRequests') || '[]');
         let approvedMembers = JSON.parse(localStorage.getItem('approvedMembers') || '[]');
@@ -384,15 +657,57 @@
             e.preventDefault();
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
+            const secretKey = document.getElementById('loginSecretKey')?.value || '';
             
-            if (email === 'admin@educlub.uz' && password === 'admin123') {
-                document.getElementById('loginScreen').classList.add('hidden');
-                document.getElementById('adminDashboard').classList.remove('hidden');
-                loadDashboard();
-                showToast('Muvaffaqiyatli kirdingiz!', 'success');
+            // Email va parolni tekshirish
+            if (email === ADMIN_CREDENTIALS.email && password === ADMIN_CREDENTIALS.password) {
+                // Qo'shimcha xavfsizlik: Secret key yoki IP tekshirish
+                if (secretKey === ADMIN_CREDENTIALS.secretKey || localStorage.getItem('adminVerified') === 'true') {
+                    document.getElementById('loginScreen').classList.add('hidden');
+                    document.getElementById('adminDashboard').classList.remove('hidden');
+                    localStorage.setItem('adminVerified', 'true');
+                    loadDashboard();
+                    showToast('Muvaffaqiyatli kirdingiz!', 'success');
+                } else {
+                    // Agar secret key noto'g'ri bo'lsa
+                    showToast('Xavfsizlik kodi noto\'g\'ri!', 'error');
+                }
             } else {
                 showToast('Email yoki parol noto\'g\'ri!', 'error');
+                
+                // 5 marta noto'g'ri urinish bo'lsa, 5 daqiqa bloklash
+                let attempts = parseInt(localStorage.getItem('loginAttempts') || '0');
+                attempts++;
+                localStorage.setItem('loginAttempts', attempts.toString());
+                
+                if (attempts >= 5) {
+                    localStorage.setItem('loginBlocked', 'true');
+                    localStorage.setItem('blockTime', Date.now().toString());
+                    showToast('5 marta noto\'g\'ri kiritdingiz! 5 daqiqa kuting.', 'error');
+                }
             }
+        }
+
+        // Bloklanganlikni tekshirish
+        function checkIfBlocked() {
+            const isBlocked = localStorage.getItem('loginBlocked') === 'true';
+            if (isBlocked) {
+                const blockTime = parseInt(localStorage.getItem('blockTime') || '0');
+                const elapsed = Date.now() - blockTime;
+                const fiveMinutes = 5 * 60 * 1000;
+                
+                if (elapsed < fiveMinutes) {
+                    const remaining = Math.ceil((fiveMinutes - elapsed) / 1000);
+                    showToast(`Judayam ko'p urinish! ${remaining} soniyadan keyin qayta urinib ko'ring.`, 'error');
+                    return true;
+                } else {
+                    // Bloklashni olib tashlash
+                    localStorage.removeItem('loginBlocked');
+                    localStorage.removeItem('blockTime');
+                    localStorage.setItem('loginAttempts', '0');
+                }
+            }
+            return false;
         }
 
         // Load Dashboard
@@ -404,11 +719,13 @@
 
         // Update Statistics
         function updateStats() {
-            document.getElementById('totalMembers').textContent = approvedMembers.length;
-            document.getElementById('totalRequests').textContent = joinRequests.length;
-            document.getElementById('approvedMembers').textContent = approvedMembers.length;
-            
+            const totalMembersCount = approvedMembers.length;
             const pendingCount = joinRequests.length;
+            const activeCirclesCount = circlesData.filter(c => c.status === 'Faol').length;
+            
+            document.getElementById('totalMembers').textContent = totalMembersCount;
+            document.getElementById('totalRequests').textContent = pendingCount;
+            document.getElementById('approvedMembers').textContent = totalMembersCount;
             document.getElementById('pendingRequests').textContent = pendingCount;
             
             const badge = document.getElementById('requestBadge');
@@ -435,7 +752,7 @@
             }
             
             container.innerHTML = joinRequests.map((request, index) => `
-                <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4 hover:shadow-lg transition">
+                <div class="border-2 border-gray-200 dark:border-gray-700 rounded-xl p-4 hover:shadow-xl transition-all card-hover gradient-border">
                     <div class="flex justify-between items-start">
                         <div class="flex-1">
                             <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-2">${request.name}</h3>
@@ -447,15 +764,20 @@
                                     <i class="fas fa-phone mr-2 text-purple-600"></i>${request.phone}
                                 </div>
                             </div>
+                            ${request.circle ? `
+                            <div class="mt-2 text-sm text-purple-600 dark:text-purple-400 font-semibold">
+                                <i class="fas fa-layer-group mr-2"></i>${request.circle}
+                            </div>
+                            ` : ''}
                             <div class="mt-2 text-xs text-gray-500">
                                 <i class="fas fa-clock mr-1"></i>${request.timestamp}
                             </div>
                         </div>
                         <div class="flex gap-2 ml-4">
-                            <button onclick="approveRequest(${index})" class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition font-semibold text-sm">
+                            <button onclick="approveRequest(${index})" class="btn-gradient px-4 py-2 text-white rounded-lg transition font-semibold text-sm shadow-lg">
                                 <i class="fas fa-check mr-1"></i>Tasdiqlash
                             </button>
-                            <button onclick="rejectRequest(${index})" class="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition font-semibold text-sm">
+                            <button onclick="rejectRequest(${index})" class="px-4 py-2 bg-gradient-to-r from-red-500 to-rose-500 text-white rounded-lg hover:shadow-lg transition font-semibold text-sm">
                                 <i class="fas fa-times mr-1"></i>Rad etish
                             </button>
                         </div>
@@ -477,6 +799,9 @@
             renderRequests();
             renderMembers();
             showToast('So\'rov tasdiqlandi!', 'success');
+            
+            // Foydalanuvchi sahifasini yangilash uchun event
+            window.dispatchEvent(new CustomEvent('memberApproved', { detail: request }));
         }
 
         // Reject Request
@@ -518,10 +843,10 @@
             }
             
             tbody.innerHTML = approvedMembers.map((member, index) => `
-                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                <tr class="table-row">
                     <td class="p-4">
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">
+                            <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
                                 ${member.name.split(' ').map(n => n[0]).join('')}
                             </div>
                             <span class="font-semibold text-gray-800 dark:text-white">${member.name}</span>
@@ -529,13 +854,14 @@
                     </td>
                     <td class="p-4 text-gray-600 dark:text-gray-300">${member.email}</td>
                     <td class="p-4 text-gray-600 dark:text-gray-300">${member.phone}</td>
+                    <td class="p-4 text-gray-600 dark:text-gray-300">${member.joinDate || 'N/A'}</td>
                     <td class="p-4 text-center">
-                        <span class="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-full text-xs font-bold">
+                        <span class="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-full text-xs font-bold shadow-sm">
                             ${member.status}
                         </span>
                     </td>
                     <td class="p-4 text-right">
-                        <button onclick="deleteMember(${index})" class="text-red-600 hover:text-red-800 p-2 hover:bg-red-50 dark:hover:bg-red-900 rounded-lg transition">
+                        <button onclick="deleteMember(${index})" class="text-red-600 hover:text-red-800 p-2 hover:bg-red-50 dark:hover:bg-red-900 rounded-lg transition transform hover:scale-110">
                             <i class="fas fa-trash"></i>
                         </button>
                     </td>
@@ -585,10 +911,10 @@
             }
             
             tbody.innerHTML = filtered.map((member, index) => `
-                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                <tr class="table-row">
                     <td class="p-4">
                         <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold">
+                            <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
                                 ${member.name.split(' ').map(n => n[0]).join('')}
                             </div>
                             <span class="font-semibold text-gray-800 dark:text-white">${member.name}</span>
@@ -598,12 +924,12 @@
                     <td class="p-4 text-gray-600 dark:text-gray-300">${member.phone}</td>
                     <td class="p-4 text-gray-600 dark:text-gray-300">${member.joinDate}</td>
                     <td class="p-4 text-center">
-                        <span class="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-full text-xs font-bold">
+                        <span class="px-3 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded-full text-xs font-bold shadow-sm">
                             ${member.status}
                         </span>
                     </td>
                     <td class="p-4 text-right">
-                        <button onclick="deleteMember(${approvedMembers.indexOf(member)})" class="text-red-600 hover:text-red-800 p-2 hover:bg-red-50 dark:hover:bg-red-900 rounded-lg transition">
+                        <button onclick="deleteMember(${approvedMembers.indexOf(member)})" class="text-red-600 hover:text-red-800 p-2 hover:bg-red-50 dark:hover:bg-red-900 rounded-lg transition transform hover:scale-110">
                             <i class="fas fa-trash"></i>
                         </button>
                     </td>
@@ -614,21 +940,34 @@
         // Render Circles
         function renderCircles() {
             const container = document.getElementById('circlesList');
+            if (!container) return;
+            
+            if (circlesData.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full text-center py-12">
+                        <i class="fas fa-layer-group text-6xl text-gray-300 dark:text-gray-600 mb-4"></i>
+                        <p class="text-gray-600 dark:text-gray-400 text-lg">Hozircha to'garaklar yo'q</p>
+                        <p class="text-gray-500 dark:text-gray-500 text-sm mt-2">Yangi to'garak qo'shish uchun yuqoridagi tugmani bosing</p>
+                    </div>
+                `;
+                return;
+            }
+            
             container.innerHTML = circlesData.map((circle, index) => `
-                <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-4 hover:shadow-lg transition">
+                <div class="border-2 border-gray-200 dark:border-gray-700 rounded-xl p-4 hover:shadow-xl transition-all card-hover gradient-border">
                     <div class="flex justify-between items-start mb-3">
                         <h3 class="text-lg font-bold text-gray-800 dark:text-white">${circle.name}</h3>
-                        <span class="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300 rounded text-xs font-bold">${circle.status}</span>
+                        <span class="px-2 py-1 ${circle.status === 'Faol' ? 'bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300' : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'} rounded text-xs font-bold shadow-sm">${circle.status}</span>
                     </div>
                     <div class="space-y-2 text-sm text-gray-600 dark:text-gray-400 mb-3">
                         <div><i class="fas fa-users mr-2 text-purple-600"></i>${circle.members} a'zo</div>
                         <div><i class="fas fa-clock mr-2 text-purple-600"></i>${circle.schedule}</div>
                     </div>
                     <div class="flex gap-2">
-                        <button onclick="editCircle(${index})" class="flex-1 px-3 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition text-sm font-semibold">
+                        <button onclick="editCircleModal(${index})" class="flex-1 px-3 py-2 bg-gradient-to-r from-blue-500 to-cyan-500 text-white rounded-lg hover:shadow-lg transition text-sm font-semibold">
                             <i class="fas fa-edit mr-1"></i>Tahrirlash
                         </button>
-                        <button onclick="deleteCircle(${index})" class="flex-1 px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition text-sm font-semibold">
+                        <button onclick="deleteCircle(${index})" class="flex-1 px-3 py-2 bg-gradient-to-r from-red-500 to-rose-500 text-white rounded-lg hover:shadow-lg transition text-sm font-semibold">
                             <i class="fas fa-trash mr-1"></i>O'chirish
                         </button>
                     </div>
@@ -636,12 +975,110 @@
             `).join('');
         }
 
+        // Show Add Circle Modal
+        function showAddCircleModal() {
+            document.getElementById('circleModalTitle').textContent = "Yangi To'garak Qo'shish";
+            document.getElementById('circleIndex').value = '';
+            document.getElementById('circleForm').reset();
+            document.getElementById('circleModal').classList.remove('hidden');
+        }
+
+        // Show Edit Circle Modal
+        function editCircleModal(index) {
+            const circle = circlesData[index];
+            
+            document.getElementById('circleModalTitle').textContent = "To'garakni Tahrirlash";
+            document.getElementById('circleIndex').value = index;
+            document.getElementById('circleName').value = circle.name;
+            document.getElementById('circleMembers').value = circle.members;
+            document.getElementById('circleSchedule').value = circle.schedule;
+            
+            // Set radio button
+            const statusRadios = document.getElementsByName('circleStatus');
+            statusRadios.forEach(radio => {
+                radio.checked = radio.value === circle.status;
+            });
+            
+            document.getElementById('circleModal').classList.remove('hidden');
+        }
+
+        // Close Circle Modal
+        function closeCircleModal() {
+            document.getElementById('circleModal').classList.add('hidden');
+        }
+        
+        // Close modal on Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('circleModal');
+                if (modal && !modal.classList.contains('hidden')) {
+                    closeCircleModal();
+                }
+            }
+        });
+
+        // Handle Circle Form Submit
+        document.getElementById('circleForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const index = document.getElementById('circleIndex').value;
+            const name = document.getElementById('circleName').value.trim();
+            const members = parseInt(document.getElementById('circleMembers').value) || 0;
+            const schedule = document.getElementById('circleSchedule').value.trim();
+            const status = document.querySelector('input[name="circleStatus"]:checked').value;
+            
+            // Validation
+            if (!name) {
+                showToast("To'garak nomini kiriting!", "error");
+                return;
+            }
+            
+            if (members < 0) {
+                showToast("A'zolar soni manfiy bo'lishi mumkin emas!", "error");
+                return;
+            }
+            
+            if (!schedule) {
+                showToast("Dars jadvalini kiriting!", "error");
+                return;
+            }
+            
+            if (index === '') {
+                // Add new circle
+                const newCircle = {
+                    id: circlesData.length > 0 ? Math.max(...circlesData.map(c => c.id)) + 1 : 1,
+                    name: name,
+                    members: members,
+                    schedule: schedule,
+                    status: status
+                };
+                
+                circlesData.push(newCircle);
+                showToast("Yangi to'garak qo'shildi!", "success");
+            } else {
+                // Edit existing circle
+                const circle = circlesData[parseInt(index)];
+                circlesData[parseInt(index)] = {
+                    ...circle,
+                    name: name,
+                    members: members,
+                    schedule: schedule,
+                    status: status
+                };
+                showToast("To'garak tahrirlandi!", "success");
+            }
+            
+            localStorage.setItem('circlesData', JSON.stringify(circlesData));
+            renderCircles();
+            closeCircleModal();
+        });
+
         function showAddCircleForm() {
-            showToast("Yangi to'garak qo'shish formasi", "info");
+            showAddCircleModal();
         }
 
         function editCircle(index) {
-            showToast("To'garakni tahrirlash", "info");
+            editCircleModal(index);
         }
 
         function deleteCircle(index) {
@@ -733,7 +1170,7 @@
         }
 
         // Show Section
-        function showSection(section) {
+        function showSection(section, event) {
             // Hide all sections
             document.getElementById('requestsSection').classList.add('hidden');
             document.getElementById('membersSection').classList.add('hidden');
@@ -771,8 +1208,13 @@
             }
             
             // Update active nav button
-            event.target.closest('.nav-btn').classList.add('bg-purple-100', 'dark:bg-purple-900/30', 'text-purple-700', 'dark:text-purple-300');
-            event.target.closest('.nav-btn').classList.remove('text-gray-700', 'dark:text-gray-200');
+            if (event && event.target) {
+                const targetBtn = event.target.closest('.nav-btn');
+                if (targetBtn) {
+                    targetBtn.classList.add('bg-purple-100', 'dark:bg-purple-900/30', 'text-purple-700', 'dark:text-purple-300');
+                    targetBtn.classList.remove('text-gray-700', 'dark:text-gray-200');
+                }
+            }
         }
 
         // Toggle Dark Mode
@@ -784,8 +1226,18 @@
         // Logout
         function logout() {
             if (confirm('Chiqmoqchimisiz?')) {
+                // Sessiyani tozalash
+                localStorage.removeItem('adminVerified');
+                localStorage.removeItem('loginAttempts');
+                
                 document.getElementById('adminDashboard').classList.add('hidden');
                 document.getElementById('loginScreen').classList.remove('hidden');
+                
+                // Formani tozalash
+                document.getElementById('loginPassword').value = '';
+                const secretKey = document.getElementById('loginSecretKey');
+                if (secretKey) secretKey.value = '';
+                
                 showToast('Tizimdan chiqdingiz', 'info');
             }
         }
@@ -804,22 +1256,33 @@
                 info: 'fa-info-circle'
             };
             
-            toast.className = `fixed top-6 right-6 z-50 glass rounded-xl p-4 flex items-center gap-3 shadow-2xl`;
-            toast.style.animation = 'slideIn 0.4s ease-out';
+            toast.className = `fixed top-6 right-6 z-50 glass rounded-xl p-4 flex items-center gap-3 shadow-2xl fade-in`;
             toast.innerHTML = `
-                <div class="w-10 h-10 bg-gradient-to-r ${colors[type]} rounded-full flex items-center justify-center flex-shrink-0">
+                <div class="w-10 h-10 bg-gradient-to-r ${colors[type]} rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
                     <i class="fas ${icons[type]} text-white"></i>
                 </div>
                 <p class="text-gray-700 dark:text-gray-200 font-semibold">${message}</p>
             `;
             
             document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            setTimeout(() => {
+                toast.style.animation = 'fadeOut 0.3s ease-out';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
         }
 
         // Check for saved dark mode
         if (localStorage.getItem('darkMode') === 'true') {
             document.documentElement.classList.add('dark');
+        }
+
+        // Sahifa yuklanganda bloklashni tekshirish
+        if (checkIfBlocked()) {
+            // Agar bloklangan bo'lsa, formani o'chirib qo'yish
+            document.getElementById('loginEmail').disabled = true;
+            document.getElementById('loginPassword').disabled = true;
+            const secretKey = document.getElementById('loginSecretKey');
+            if (secretKey) secretKey.disabled = true;
         }
 
         // Auto-refresh requests every 3 seconds
